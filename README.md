@@ -15,7 +15,8 @@ These are the Steps I have took
         `python -m  venv venv`
         `source venv/bin/activate`
     You should see this if sucessful:
-     ![alt text](image.png)
+     <img width="338" height="21" alt="image" src="https://github.com/user-attachments/assets/105a8a8d-e49f-4c27-a6c4-e6ccefa790f6" />
+
 
 2. Install Flask and Redis
   Flask :
@@ -32,7 +33,8 @@ To check if requirements.txt has correct dependencies do this :
 `cat requirements.txt `
 
 3. Then set up application :
-`
+
+```
  import redis
 from flask import Flask
 
@@ -52,10 +54,10 @@ def count():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5002)
-    `
-
+```
+    
 4. Setup DockerFile 
-
+```
 FROM python:3.12-slim   --> Base Image
 WORKDIR /app      -->  This sets up /app in the image
 COPY requirements.txt .    --> Copies requirement.txt from host to image
@@ -63,7 +65,7 @@ RUN pip install -r requirements.txt --> Installs the requirements.txt
 COPY . .   ---> Copies from the host machine into the image (app.py)
 EXPOSE 5002  --> Use port 5002 to run application
 CMD [ "python3" , "app.py" ]  -->  First run this command when container starts
-
+```
 
 
 4a . Build the Docker Image
@@ -94,26 +96,28 @@ services:   --> This lists the containers web and redis and ho they should inter
 
 - http://127.0.0.1:5002/
 
-![alt text](image-1.png)
+<img width="1596" height="848" alt="image" src="https://github.com/user-attachments/assets/d5959215-3d72-490d-b3b0-eba4e05d9be9" />
+
 
 
 
 - http://127.0.0.1:5002/count
 
-![alt text](image-2.png)
+<img width="1599" height="847" alt="image" src="https://github.com/user-attachments/assets/599da074-4260-4d57-9701-0db5a6b0af62" />
+
 
 
 
 ## Challenege
-One thing I struggled with was understand where pip packages. This because when I ran the Docker-compose up when running docker-compose.yml file .
+One thing I struggled with was understand where pip packages went. This because when I ran the Docker-compose up when running docker-compose.yml file .
 
 I got this error message : 
-![alt text](image-3.png)
+<img width="487" height="208" alt="image" src="https://github.com/user-attachments/assets/b972b2d0-7778-4634-a9d6-c99318157f88" />
+
 
 - This is because the web contianer is unable to find the python redis package , this is beacuse the package sits outside the container.
 
-This because I used a multi stage docker-compose.yml in which I did not use the correct dir where the pip packages live : /usr/local/lib/python3.12/site-packages . For simplicity ,
-I removed the Multi-stage build.
+This because I used a multi stage docker-compose.yml in which I did not use the correct dir where the pip packages live : `/usr/local/lib/python3.12/site-packages `. For simplicity I removed the Multi-stage build.
 
 Multi-stage build :
 
@@ -135,5 +139,23 @@ WORKDIR /app
 COPY --from=build /app /app
 EXPOSE 5002
 CMD [ "python3" , "app.py" ]
+
+```
+
+
+New DokcerFile  
+
+```
+
+
+# Stage 1: Dependencies
+FROM python:3.12-slim AS build
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5002
+CMD [ "python3" , "app.py" ]
+
 
 ```
