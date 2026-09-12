@@ -112,6 +112,8 @@ services:   --> This lists the containers web and redis and ho they should inter
 One thing I struggled with was understand where pip packages went. This because when I ran the Docker-compose up when running docker-compose.yml file .
 
 I got this error message : 
+
+
 <img width="487" height="208" alt="image" src="https://github.com/user-attachments/assets/b972b2d0-7778-4634-a9d6-c99318157f88" />
 
 
@@ -148,7 +150,6 @@ New DokcerFile
 ```
 
 
-# Stage 1: Dependencies
 FROM python:3.12-slim AS build
 WORKDIR /app
 COPY requirements.txt .
