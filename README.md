@@ -137,3 +137,68 @@ EXPOSE 5002
 CMD [ "python3" , "app.py" ]
 
 ```
+
+## Bonus
+
+## Objective
+
+The following objective is :
+- Persistent Storage for Redis: Configure Redis to use a volume to persist its data.
+- Environment Variables: Modify the Flask application to read Redis connection details from environment variables and update the docker-compose.yml accordingly.
+
+## Persistent Storage
+So far , in this challenge our data gets overwritten every time when we rerun our container. Therefore we lose data. To combat this we use something called  `volumes` in our docker-compose.yml file.
+
+`volumes` - It is a persistent storage that stores your data outside your container . Even if the container is shutdown still keeps and stores data.
+
+You need to declare it inside your docker-compose.yml
+```
+volumes:
+  db_data:   ----> named volumes
+```
+Also you need to declare explicity inside your services
+
+```
+redis:
+    image: redis
+    volumes:
+    - db_data:/data   ---->   named volume:/path
+  
+```
+redis stores its data at `/data`
+
+
+## Errors
+
+- `services.volumes must be a mapping`
+  This was due to a syntax error
+  Ans : Indentation Error
+
+
+`validating /home/qalay/Docker Challenge/docker-compose.yml: services.volumes additional properties 'db_data' not allowed`
+
+This happend as I have identended the global variable volumes under the services
+Ans : Put the volumes variable  on the same ident as services
+
+`Error: /home/qalay/Docker Challenge/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion `
+service "redis" refers to undefined volume db_data: invalid compose project
+
+- This is because it does not know db_data is since the named volume is db-data so I need to change it to make it match
+
+
+
+## Environment Variables: Modify the Flask application to read Redis connection details from environment variables and update the docker-compose.yml accordingly.
+
+Environment variable - This is a dynamic key pair value that is used configure applications without being hardcoded
+
+To do this in Docker-compose.yml file
+is 
+
+```
+environment:
+    key=value
+```
+To modify flask application to read the env variable we need to import OS libary and we need to use getenv variable
+
+`os.getenv` --> This is used to grab environment variable .
+
