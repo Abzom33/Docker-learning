@@ -144,7 +144,6 @@ CMD [ "python3" , "app.py" ]
 
 ```
 
-<<<<<<< HEAD
 ## Bonus
 
 ## Objective
@@ -209,21 +208,3 @@ To modify flask application to read the env variable we need to import OS libary
 
 `os.getenv` --> This is used to grab environment variable .
 
-=======
-
-New DokcerFile  
-
-```
-
-
-FROM python:3.12-slim AS build
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-COPY . .
-EXPOSE 5002
-CMD [ "python3" , "app.py" ]
-
-
-```
->>>>>>> 5ed0e9df7ab5426e5f71351c19ea777bf706b605
