@@ -206,5 +206,34 @@ environment:
 ```
 To modify flask application to read the env variable we need to import OS libary and we need to use getenv variable
 
-`os.getenv` --> This is used to grab environment variable .
+`os.getenv(key , default)` --> This is used to grab environment variable .
 
+- `key` --> name of env variable to look up
+- `default` ---> The value to look for incase it can't find env variable
+
+
+```
+redis_host = os.getenv('host', 'localhost')
+redis_port=os.getenv('port', 6379)
+r = redis.Redis(host=redis_host, port=redis_port)
+
+```
+
+
+```
+  web:
+    image: challenge:v1
+    volumes:
+    - db_data:/data
+      
+    ports:
+      - "5002:5002"
+    depends_on:
+      - redis
+    environment:
+      - redis_host=redis
+      - redis_port=6379
+
+
+
+```
