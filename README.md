@@ -119,7 +119,7 @@ I got this error message :
 
 - This is because the web contianer is unable to find the python redis package , this is beacuse the package sits outside the container.
 
-This because I used a multi stage docker-compose.yml in which I did not use the correct dir where the pip packages live : `/usr/local/lib/python3.12/site-packages `. For simplicity I removed the Multi-stage build.
+This was because I used a multi-stage docker-compose.yml in which I did not use the correct dir where the pip packages live: `/usr/local/lib/python3.12/site-packages`. My `COPY --from=build /app /app` line only copied the `/app` directory from the build stage, not the installed packages themselves. pip installs into that site-packages path, which lives outside `/app`, so none of it made it into the final image. For simplicity I removed the multi-stage build since it is not necessary for this challenge.
 
 Multi-stage build :
 
@@ -197,8 +197,8 @@ service "redis" refers to undefined volume db_data: invalid compose project
 
 Environment variable - This is a dynamic key pair value that is used configure applications without being hardcoded
 
-To do this in Docker-compose.yml file
-is 
+To do this in Docker-compose.yml file : 
+
 
 ```
 environment:
@@ -231,8 +231,8 @@ r = redis.Redis(host=redis_host, port=redis_port)
     depends_on:
       - redis
     environment:
-      - redis_host=redis
-      - redis_port=6379
+      - host=redis
+      - port=6379
 
 
 
@@ -271,7 +271,8 @@ http {
     }
 }
 ```
-2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing
+2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing.
+   
 
 ```
 nginx:
@@ -281,7 +282,7 @@ nginx:
         - ./nginx.conf:/etc/nginx/nginx.conf
     
     ports:
-      - 5002:5002
+      - 5002:5002  ---> the `web` service should not  be mapped to 5002 host to conatiner port as this will cause a port conflict. Only nginx should be so it can acesss our         container
 
     depends_on:
       - web
