@@ -73,7 +73,8 @@ CMD [ "python3" , "app.py" ]  -->  First run this command when container starts
 
 5. Setup Docker-compose.yml file
 
-- We use this so we can run both containers within a single command . 
+- We use this so we can run both containers within a single command .
+- `docker-compose up -d`
 ```
 version: '3.8'
 
