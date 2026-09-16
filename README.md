@@ -118,7 +118,7 @@ I got this error message :
 <img width="487" height="208" alt="image" src="https://github.com/user-attachments/assets/b972b2d0-7778-4634-a9d6-c99318157f88" />
 
 
-- This is because the web contianer is unable to find the python redis package , this is beacuse the package sits outside the container.
+- This is because the web contianer is unable to find the python redis package , this is because the package sits outside the container.
 
 This was because I used a multi-stage docker-compose.yml in which I did not use the correct dir where the pip packages live: `/usr/local/lib/python3.12/site-packages`. My `COPY --from=build /app /app` line only copied the `/app` directory from the build stage, not the installed packages themselves. pip installs into that site-packages path, which lives outside `/app`, so none of it made it into the final image. For simplicity I removed the multi-stage build since it is not necessary for this challenge.
 
@@ -187,8 +187,8 @@ redis stores its data at `/data`
 This happend as I have identended the global variable volumes under the services
 Ans : Put the volumes variable  on the same ident as services
 
-`Error: /home/qalay/Docker Challenge/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion `
-service "redis" refers to undefined volume db_data: invalid compose project
+`Error: /home/qalay/Docker Challenge/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+service "redis" refers to undefined volume db_data: invalid compose project`
 
 - This is because it does not know db_data is since the named volume is db-data so I need to change it to make it match
 
