@@ -283,7 +283,7 @@ nginx:
         - ./nginx.conf:/etc/nginx/nginx.conf
     
     ports:
-      - 5002:5002  ---> the `web` service should not  be mapped to 5002 host to conatiner port as this will cause a port conflict. Only nginx should be so it can acesss our         container
+      - 5002:5002  ---> the `web` service should not  be mapped to 5002 host to conatiner port as this will cause a port conflict. Only nginx should be so it can acesss our container       
 
     depends_on:
       - web
