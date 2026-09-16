@@ -237,3 +237,65 @@ r = redis.Redis(host=redis_host, port=redis_port)
 
 
 ```
+
+## Scaling the Application: Scale the Flask service to run multiple instances and load balance between them using Docker Compose.
+
+For this section , we are presented with a task to scale our flask service and load balance between each instance.
+Before we start lets define what is load balancing ?
+
+## Load balancing 
+-  It is the process of spreading network traffic across different servers to keep the application fast and reliable
+- For this section we are going to use `NGINX` to be our load balancer.
+
+## Steps
+
+1. First create a nginx.conf file . This file will be responsible for load balancing between different server.
+
+````
+
+events {}
+
+http {
+    # Define the group of servers available
+    upstream app {
+        server web:5002;
+        
+    }
+    server {
+        # Server group will respond to port 5002
+        listen 5002;
+        server_name web;
+        location / {
+            proxy_pass http://app;
+        }
+    }
+}
+```
+
+2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing
+
+```
+nginx:
+    image: nginx:latest
+    
+    volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+    
+    ports:
+      - 5002:5002
+
+    depends_on:
+      - web
+
+```
+
+3. Scale our flask application
+
+- Usr this command to do so :
+
+`docker-compose up -d --scale name=scale`
+
+For example if we want to scale our web application to 3 different servers
+
+`docker-compose up -d --scale web=3`
+
