@@ -249,17 +249,17 @@ Before we start lets define what is load balancing ?
 
 ## Steps
 
-1. First create a nginx.conf file . This file will be responsible for load balancing between different server.
+1. First create a `nginx.conf file` . This file will be responsible for load balancing between different server.
 
-````
 
+```
 events {}
 
 http {
     # Define the group of servers available
     upstream app {
         server web:5002;
-        
+
     }
     server {
         # Server group will respond to port 5002
@@ -271,7 +271,6 @@ http {
     }
 }
 ```
-
 2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing
 
 ```
@@ -289,6 +288,9 @@ nginx:
 
 ```
 
+
+
+
 3. Scale our flask application
 
 - Usr this command to do so :
@@ -298,4 +300,9 @@ nginx:
 For example if we want to scale our web application to 3 different servers
 
 `docker-compose up -d --scale web=3`
+
+
+
+
+
 
