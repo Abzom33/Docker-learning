@@ -6,6 +6,18 @@ Building a Multi Container Application
 
 Create a multi-container application that consists of a simple Python Flask web application and a Redis database. The Flask application should use Redis to store and retrieve data.
 
+## Architecture
+
+```mermaid
+graph TD
+    U[User / Browser] -->|"HTTP :5002"| N[nginx<br/>load balancer]
+    N -->|proxy_pass| W1[web instance 1]
+    N -->|proxy_pass| W2[web instance 2]
+    N -->|proxy_pass| W3[web instance 3]
+    W1 & W2 & W3 -->|"host/port via env vars"| R[(redis)]
+    R -->|persists| V[(db_data volume)]
+```
+
 ## Application
 These are the Steps I have took
 
