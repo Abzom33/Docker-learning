@@ -192,6 +192,10 @@ service "redis" refers to undefined volume db_data: invalid compose project`
 
 - This is because it does not know db_data is since the named volume is db-data so I need to change it to make it match
 
+  
+  <img width="1389" height="760" alt="image" src="https://github.com/user-attachments/assets/0e31a006-2bf5-43e6-9010-3cbd5d7848ac" />
+
+
 
 
 ## Environment Variables: Modify the Flask application to read Redis connection details from environment variables and update the docker-compose.yml accordingly.
