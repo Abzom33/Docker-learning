@@ -37,11 +37,13 @@ These are the Steps I have took
 1. First create a virtual environment:
         `python -m  venv venv`
         `source venv/bin/activate`
+   
     You should see this if sucessful:
+   
      <img width="338" height="21" alt="image" src="https://github.com/user-attachments/assets/105a8a8d-e49f-4c27-a6c4-e6ccefa790f6" />
 
 
-2. Install Flask and Redis
+3. Install Flask and Redis
   Flask :
   `pip install flask`
   Redis:
@@ -49,7 +51,9 @@ These are the Steps I have took
 
 2. Next set up requirements.txt file 
 - This is where you dependencies is going to be
-Commands
+  
+Commands:
+
 `pip freeze > requirements.txt`
 
 To check if requirements.txt has correct dependencies do this :
