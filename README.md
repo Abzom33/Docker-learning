@@ -85,7 +85,8 @@ CMD [ "python3" , "app.py" ]  -->  First run this command when container starts
 
 5. Setup Docker-compose.yml file
 
-- We use this so we can run both containers within a single command . 
+- We use this so we can run both containers within a single command .
+- `docker-compose up -d`
 ```
 version: '3.8'
 
@@ -129,9 +130,9 @@ I got this error message :
 <img width="487" height="208" alt="image" src="https://github.com/user-attachments/assets/b972b2d0-7778-4634-a9d6-c99318157f88" />
 
 
-- This is because the web contianer is unable to find the python redis package , this is beacuse the package sits outside the container.
+- This is because the web contianer is unable to find the python redis package , this is because the package sits outside the container.
 
-This because I used a multi stage docker-compose.yml in which I did not use the correct dir where the pip packages live : `/usr/local/lib/python3.12/site-packages `. For simplicity I removed the Multi-stage build.
+This was because I used a multi-stage docker-compose.yml in which I did not use the correct dir where the pip packages live: `/usr/local/lib/python3.12/site-packages`. My `COPY --from=build /app /app` line only copied the `/app` directory from the build stage, not the installed packages themselves. pip installs into that site-packages path, which lives outside `/app`, so none of it made it into the final image. For simplicity I removed the multi-stage build since it is not necessary for this challenge.
 
 Multi-stage build :
 
@@ -198,10 +199,14 @@ redis stores its data at `/data`
 This happend as I have identended the global variable volumes under the services
 Ans : Put the volumes variable  on the same ident as services
 
-`Error: /home/qalay/Docker Challenge/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion `
-service "redis" refers to undefined volume db_data: invalid compose project
+`Error: /home/qalay/Docker Challenge/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+service "redis" refers to undefined volume db_data: invalid compose project`
 
 - This is because it does not know db_data is since the named volume is db-data so I need to change it to make it match
+
+  
+  <img width="1389" height="760" alt="image" src="https://github.com/user-attachments/assets/0e31a006-2bf5-43e6-9010-3cbd5d7848ac" />
+
 
 
 
@@ -209,8 +214,8 @@ service "redis" refers to undefined volume db_data: invalid compose project
 
 Environment variable - This is a dynamic key pair value that is used configure applications without being hardcoded
 
-To do this in Docker-compose.yml file
-is 
+To do this in Docker-compose.yml file : 
+
 
 ```
 environment:
@@ -243,8 +248,8 @@ r = redis.Redis(host=redis_host, port=redis_port)
     depends_on:
       - redis
     environment:
-      - redis_host=redis
-      - redis_port=6379
+      - host=redis
+      - port=6379
 
 
 
@@ -261,17 +266,17 @@ Before we start lets define what is load balancing ?
 
 ## Steps
 
-1. First create a nginx.conf file . This file will be responsible for load balancing between different server.
+1. First create a `nginx.conf file` . This file will be responsible for load balancing between different server.
 
-````
 
+```
 events {}
 
 http {
     # Define the group of servers available
     upstream app {
         server web:5002;
-        
+
     }
     server {
         # Server group will respond to port 5002
@@ -283,8 +288,8 @@ http {
     }
 }
 ```
-
-2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing
+2. Update the docker-compose.yml file by creating nginx service that will mount to our nginx.conf file that will be able to apply load balancing.
+   
 
 ```
 nginx:
@@ -294,12 +299,15 @@ nginx:
         - ./nginx.conf:/etc/nginx/nginx.conf
     
     ports:
-      - 5002:5002
+      - 5002:5002  ---> the `web` service should not  be mapped to 5002 host to conatiner port as this will cause a port conflict. Only nginx should be so it can acesss our container       
 
     depends_on:
       - web
 
 ```
+
+
+
 
 3. Scale our flask application
 
@@ -310,4 +318,9 @@ nginx:
 For example if we want to scale our web application to 3 different servers
 
 `docker-compose up -d --scale web=3`
+
+
+
+
+
 
