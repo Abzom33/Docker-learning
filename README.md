@@ -26,7 +26,7 @@ Docker-learning/
     ├── include/
     ├── lib/
     ├── lib64/
-    └── pyvenv.cfg
+    └── pyvenv.cf
 ```
 
 ## Application
