@@ -6,16 +6,27 @@ Building a Multi Container Application
 
 Create a multi-container application that consists of a simple Python Flask web application and a Redis database. The Flask application should use Redis to store and retrieve data.
 
-## Architecture
+## Project structure
 
-```mermaid
-graph TD
-    U[User / Browser] -->|"HTTP :5002"| N[nginx<br/>load balancer]
-    N -->|proxy_pass| W1[web instance 1]
-    N -->|proxy_pass| W2[web instance 2]
-    N -->|proxy_pass| W3[web instance 3]
-    W1 & W2 & W3 -->|"host/port via env vars"| R[(redis)]
-    R -->|persists| V[(db_data volume)]
+```
+Docker-learning/
+├── app.py
+├── Dockerfile
+├── docker-compose.yml
+├── nginx.conf
+├── requirements.txt
+├── README.md
+├── .gitignore
+├── image.png
+├── image-1.png
+├── image-2.png
+├── image-3.png
+└── venv/
+    ├── bin/
+    ├── include/
+    ├── lib/
+    ├── lib64/
+    └── pyvenv.cfg
 ```
 
 ## Application
@@ -239,10 +250,7 @@ r = redis.Redis(host=redis_host, port=redis_port)
 
 ```
   web:
-    image: challenge:v1
-    volumes:
-    - db_data:/data
-      
+    image: challenge:v1    
     ports:
       - "5002:5002"
     depends_on:
