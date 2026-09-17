@@ -206,6 +206,7 @@ redis stores its data at `/data`
 
 - `services.volumes must be a mapping`
   This was due to a syntax error
+
   Ans : Indentation Error
 
 
